@@ -1,0 +1,6 @@
+{
+    "node": true,
+    "laxcomma": true,
+    "sub": true,
+    "expr": true
+}
