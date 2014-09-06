@@ -86,12 +86,9 @@ describe('MessageParser:decode', function () {
     });
 
     it('should parse a message', function (done) {
-        var message = JSON.stringify([2]);
-        mp.decode(message, function (message) {
-            expect(message.type).to.be.equal('WELCOME');
-            return true;
-        }).then(function (parsed) {
-            expect(parsed, 'parsed').to.be.true;
+        var message = JSON.stringify([1, 'com.example.inge', {roles: {publisher: {}}}]);
+        mp.decode(message).then(function (message) {
+            expect(message).to.be.deep.equal({type: 'HELLO', realm: 'com.example.inge', details: {roles: {publisher: {}}}});
             done();
         }).catch(done);
     });
