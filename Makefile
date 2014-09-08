@@ -4,14 +4,13 @@ install:
 	@echo "************************"
 	@echo "* INSTALL DEPENDENCIES *"
 	@echo "************************"
-	@npm install
+	@npm install --python=/usr/bin/python2.7
 
 test:
-	@cat .dev-logo
-	@echo
 	@echo "************************"
 	@echo "* TEST LIBRARY         *"
 	@echo "************************"
+	@cat .dev-logo
 	@./node_modules/.bin/mocha --recursive test/*.spec.js
 
 docs:

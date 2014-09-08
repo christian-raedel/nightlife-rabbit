@@ -1,4 +1,5 @@
 var MessageParser = require('../lib/message-parser')
+    , Message = require('../lib/message-types').Message
     , CLogger = require('node-clogger')
     , chai = require('chai')
     , expect = chai.expect
@@ -9,26 +10,6 @@ var MessageParser = require('../lib/message-parser')
 chai.use(spies).use(promised);
 
 var logger = new CLogger({name: 'message-parser-tests'});
-
-/**
- * memwatch --------------------------------------------------------
- */
-var memwatch = require('memwatch');
-var inspect = require('util').inspect;
-
-var heapdiff = new memwatch.HeapDiff();
-memwatch.on('leak', function (info) {
-    logger.warn('memory leak:\n%s', inspect(info));
-    var diff = heapdiff.end();
-    logger.warn('heapdiff:\n%s', inspect(diff));
-    heapdiff = new memwatch.HeapDiff();
-});
-memwatch.on('stats', function (stats) {
-    logger.info('memory stats:\n%s', inspect(stats));
-});
-/**
- * memwatch --------------------------------------------------------
- */
 
 describe('MessageParser:constructor', function () {
     it('should instantiate', function () {
@@ -75,6 +56,14 @@ describe('MessageParser:encode', function () {
             done();
         })
         .catch(done);
+    });
+});
+
+describe('Message', function () {
+    it('should decode a message', function () {
+        var data = [2, 43, {roles: {publisher: {}}}];
+        var message = new Message(data).set('session.id').set('details').get();
+        expect(message).to.be.deep.equal({type: 'WELCOME', session: {id: 43}, details: {roles: {publisher: {}}}});
     });
 });
 
