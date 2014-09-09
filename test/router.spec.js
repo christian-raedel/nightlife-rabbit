@@ -137,4 +137,51 @@ describe('Router:Session:Publish/Subscribe', function () {
             done(new Error(reason));
         });
     });
+
+    it('should publish to a topic', function (done) {
+        function onevent(args, kwargs, details) {
+            expect(args).to.be.deep.equal(['hello inge!']);
+            expect(kwargs).to.have.property('to', 'inge');
+            expect(details).to.be.ok;
+        }
+        var spy = chai.spy(onevent);
+
+        session.subscribe('com.example.inge', spy)
+        .then(function () {
+            session.publish('com.example.inge', ['hello inge!'], {to: 'inge'}, {acknowledge: true})
+            .then(function (published) {
+                expect(published).to.have.property('id');
+            });
+        })
+        .catch(function (reason) {
+            done(new Error(reason));
+        });
+
+        setTimeout(function () {
+            expect(spy).to.have.been.called.once;
+            done();
+        }, 2000);
+    });
+
+    it('should register a remote procedure', function (done) {
+        session.register('com.example.rest', function () {})
+        .then(function (registration) {
+            expect(registration).to.be.an.instanceof(autobahn.Registration);
+            done();
+        })
+        .catch(function (reason) {
+            done(new Error(reason));
+        });
+    });
+
+    it('should unregister a remote procedure', function (done) {
+        session.register('com.example.rest', function () {})
+        .then(function (registration) {
+            expect(session.isOpen).to.be.true;
+            session.unregister(registration).then(done)
+            .catch(function (reason) {
+                done(new Error(reason));
+            });
+        });
+    });
 });
