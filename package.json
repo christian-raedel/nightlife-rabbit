@@ -37,7 +37,6 @@
     "node-clogger": "git+https://github.com/christian-raedel/node-clogger.git",
     "node-cplate": "git+https://github.com/christian-raedel/node-cplate.git",
     "q": "^1.0.1",
-    "socket.io-client": "git+https://github.com/Automattic/socket.io-client.git",
     "ws": "^0.4.32"
   }
 }

@@ -163,6 +163,16 @@ describe('Router:Session:Publish/Subscribe', function () {
         }, 2000);
     });
 
+    /*
+    it('should throw an error, if publish to non-subscribed topic', function (done) {
+        session.publish('com.example.inge', ['hello inge!'], {}, {acknowledge: true})
+        .catch(function (err) {
+            expect(err).to.be.an.instanceof(autobahn.Error);
+            done();
+        });
+    });
+    */
+
     it('should register a remote procedure', function (done) {
         session.register('com.example.rest', function () {})
         .then(function (registration) {
@@ -179,6 +189,30 @@ describe('Router:Session:Publish/Subscribe', function () {
         .then(function (registration) {
             expect(session.isOpen).to.be.true;
             session.unregister(registration).then(done)
+            .catch(function (reason) {
+                done(new Error(reason));
+            });
+        });
+    });
+
+    it('should call a remote procedure', function (done) {
+        function echo(args, kwargs, details) {
+            expect(args).to.be.deep.equal(['hello inge!']);
+            expect(kwargs).to.have.property('name', 'inge');
+            logger.debug(details);
+            return 'echo';
+        }
+
+        var spy = chai.spy(echo);
+
+        session.register('com.example.echo', spy)
+        .then(function (registration) {
+            session.call('com.example.echo', ['hello inge!'], {name: 'inge'})
+            .then(function (result) {
+                expect(result).to.be.equal('echo');
+                expect(spy).to.have.been.called.once;
+                done();
+            })
             .catch(function (reason) {
                 done(new Error(reason));
             });
