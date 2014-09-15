@@ -208,20 +208,18 @@ describe('Router:Remote Procedures', function () {
         });
     });
 
-    /*
     it('should return an error, if remote procedure throws', function (done) {
         expect(session.isOpen).to.be.true;
         session.call('com.example.inge', ['hello inge!'], {to: 'world'})
-        .then(function (result) {
-            expect(result).to.be.an.instanceof(autobahn.Error);
-            expect(spyCall).to.have.been.called.once;
-            done();
-        })
         .catch(function (err) {
-            done(new Error(err));
+            expect(err).to.be.an.instanceof(autobahn.Error);
+            expect(err.error).to.be.equal('com.example.inge.error');
+            expect(err.args).to.be.deep.equal(['hello inge!']);
+            expect(err.kwargs).to.have.property('to', 'world');
+            expect(spyCall).to.have.been.called.twice;
+            done();
         });
     });
-    */
 
     it('should unregister a remote procedure', function (done) {
         expect(session.isOpen).to.be.true;
