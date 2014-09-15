@@ -29,7 +29,9 @@ describe('Router:Session', function () {
     });
 
     after(function (done) {
-        router.close().then(done).catch(done);
+        setTimeout(function () {
+            router.close().then(done).catch(done);
+        });
     });
 
     it('should establish a new session', function (done) {
@@ -84,7 +86,11 @@ describe('Router:Publish/Subscribe', function () {
     });
 
     after(function (done) {
-        router.close().then(done).catch(done);
+        connection.close();
+
+        setTimeout(function () {
+            router.close().then(done).catch(done);
+        });
     });
 
     function onevent(args, kwargs, details) {
@@ -125,6 +131,101 @@ describe('Router:Publish/Subscribe', function () {
     it('should unsubscribe from a topic', function (done) {
         expect(session.isOpen).to.be.true;
         session.unsubscribe(subscription)
+        .then(function () {
+            done();
+        })
+        .catch(function (err) {
+            done(new Error(err.stack));
+        });
+    });
+});
+
+describe('Router:Remote Procedures', function () {
+    var router = null, connection = null, session = null, registration = null;
+
+    before(function (done) {
+        router = nightlife.createRouter();
+
+        setTimeout(function() {
+            connection = new autobahn.Connection({
+                realm: 'com.to.inge.world',
+                url: 'ws://localhost:3000/nightlife'
+            });
+
+            connection.onopen = function (s) {
+                session = s;
+                done();
+            };
+
+            connection.open();
+        }, 500);
+    });
+
+    after(function (done) {
+        connection.close();
+
+        setTimeout(function () {
+            router.close().then(done).catch(done);
+        });
+    });
+
+    function onCall(args, kwargs, details) {
+        expect(args).to.be.deep.equal(['hello inge!']);
+        expect(kwargs).to.have.property('to');
+        expect(details).to.be.ok;
+
+        if (kwargs.to === 'world') {
+            throw new autobahn.Error('com.example.inge.error', args, kwargs);
+        } else {
+            return 'inge';
+        }
+    }
+    var spyCall = chai.spy(onCall);
+
+    it('should register a remote procedure', function (done) {
+        expect(session.isOpen).to.be.true;
+        session.register('com.example.inge', spyCall)
+        .then(function (r) {
+            expect(r).to.have.property('id');
+            registration = r;
+            done();
+        })
+        .catch(function (err) {
+            console.log(err.stack);
+        });
+    });
+
+    it('should call a remote procedure', function (done) {
+        expect(session.isOpen).to.be.true;
+        session.call('com.example.inge', ['hello inge!'], {to: 'inge'})
+        .then(function (result) {
+            expect(result).to.be.equal('inge');
+            expect(spyCall).to.have.been.called.once;
+            done();
+        })
+        .catch(function (err) {
+            done(new Error(err));
+        });
+    });
+
+    /*
+    it('should return an error, if remote procedure throws', function (done) {
+        expect(session.isOpen).to.be.true;
+        session.call('com.example.inge', ['hello inge!'], {to: 'world'})
+        .then(function (result) {
+            expect(result).to.be.an.instanceof(autobahn.Error);
+            expect(spyCall).to.have.been.called.once;
+            done();
+        })
+        .catch(function (err) {
+            done(new Error(err));
+        });
+    });
+    */
+
+    it('should unregister a remote procedure', function (done) {
+        expect(session.isOpen).to.be.true;
+        session.unregister(registration)
         .then(function () {
             done();
         })
