@@ -15,7 +15,7 @@ describe('Router#constructor', function () {
         expect(router).to.be.an.instanceof(nightlife.Router);
         expect(router.roles).to.have.property('broker');
         expect(router.roles).to.have.property('dealer');
-        router.close().then(done).catch(done);
+        router.close().then(done).catch(done).done();
     });
 });
 
@@ -30,7 +30,7 @@ describe('Router:Session', function () {
 
     after(function (done) {
         setTimeout(function () {
-            router.close().then(done).catch(done);
+            router.close().then(done).catch(done).done();
         });
     });
 
@@ -89,7 +89,7 @@ describe('Router:Publish/Subscribe', function () {
         connection.close();
 
         setTimeout(function () {
-            router.close().then(done).catch(done);
+            router.close().then(done).catch(done).done();
         });
     });
 
@@ -109,7 +109,8 @@ describe('Router:Publish/Subscribe', function () {
         })
         .catch(function (err) {
             done(new TypeError(err.stack));
-        });
+        })
+        .done();
     });
 
     it('should publish to a topic', function (done) {
@@ -120,7 +121,8 @@ describe('Router:Publish/Subscribe', function () {
         })
         .catch(function (err) {
             done(new Error(err.stack));
-        });
+        })
+        .done();
 
         setTimeout(function () {
             expect(spyEvent).to.have.been.called.once;
@@ -136,7 +138,8 @@ describe('Router:Publish/Subscribe', function () {
         })
         .catch(function (err) {
             done(new Error(err.stack));
-        });
+        })
+        .done();
     });
 });
 
@@ -165,7 +168,7 @@ describe('Router:Remote Procedures', function () {
         connection.close();
 
         setTimeout(function () {
-            router.close().then(done).catch(done);
+            router.close().then(done).catch(done).done();
         });
     });
 
@@ -192,7 +195,8 @@ describe('Router:Remote Procedures', function () {
         })
         .catch(function (err) {
             console.log(err.stack);
-        });
+        })
+        .done();
     });
 
     it('should call a remote procedure', function (done) {
@@ -205,7 +209,8 @@ describe('Router:Remote Procedures', function () {
         })
         .catch(function (err) {
             done(new Error(err));
-        });
+        })
+        .done();
     });
 
     it('should return an error, if remote procedure throws', function (done) {
@@ -229,6 +234,7 @@ describe('Router:Remote Procedures', function () {
         })
         .catch(function (err) {
             done(new Error(err.stack));
-        });
+        })
+        .done();
     });
 });
