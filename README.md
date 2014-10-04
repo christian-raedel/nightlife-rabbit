@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/christian-raedel/nightlife-rabbit.svg)](https://travis-ci.org/christian-raedel/nightlife-rabbit)
+[![Build Status](https://travis-ci.org/christian-raedel/nightlife-rabbit.svg?branch=master)](https://travis-ci.org/christian-raedel/nightlife-rabbit)
 
 #Nightlife-Rabbit#
 
