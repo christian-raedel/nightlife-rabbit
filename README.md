@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/christian-raedel/nightlife-rabbit.svg?branch=master)](https://travis-ci.org/christian-raedel/nightlife-rabbit)
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/christian-raedel/nightlife-rabbit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 #Nightlife-Rabbit#
 
