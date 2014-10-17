@@ -1,11 +1,14 @@
 global.AUTOBAHN_DEBUG = true;
 
 var nightlife  = require('../lib/router')
+    , CLogger  = require('node-clogger')
     , autobahn = require('autobahn')
     , chai     = require('chai')
     , expect   = chai.expect
     , promised = require('chai-as-promised')
     , spies    = require('chai-spies');
+
+var logger = new CLogger({name: 'router-tests'});
 
 chai.use(spies).use(promised);
 
@@ -77,6 +80,7 @@ describe('Router:Publish/Subscribe', function () {
             });
 
             connection.onopen = function (s) {
+                logger.info('router up and session connected');
                 session = s;
                 done();
             };
@@ -94,6 +98,7 @@ describe('Router:Publish/Subscribe', function () {
     });
 
     function onevent(args, kwargs, details) {
+        logger.info('on event');
         expect(args).to.be.ok;
         expect(kwargs).to.be.ok;
         expect(details).to.be.ok;
@@ -101,9 +106,11 @@ describe('Router:Publish/Subscribe', function () {
     var spyEvent = chai.spy(onevent);
 
     it('should subscribe to a topic', function (done) {
+        logger.info('try to subscribe');
         expect(session.isOpen).to.be.true;
         session.subscribe('com.example.inge', spyEvent)
         .then(function (s) {
+            logger.info('subscribed to topic');
             subscription = s;
             done();
         })
