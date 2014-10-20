@@ -27,8 +27,7 @@
     "chai-as-promised": "^4.1.1",
     "chai-spies": "^0.5.1",
     "jsdoc": "^3.3.0-alpha9",
-    "mocha": "^1.21.4",
-    "segfault-handler": "^0.2.2"
+    "mocha": "^1.21.4"
   },
   "dependencies": {
     "debug": "^2.0.0",
@@ -37,6 +36,7 @@
     "node-cconf": "git+https://github.com/christian-raedel/node-cconf.git",
     "node-clogger": "git+https://github.com/christian-raedel/node-clogger.git",
     "q": "^1.0.1",
+    "segfault-handler": "^0.2.2",
     "ws": "^0.4.32"
   }
 }
