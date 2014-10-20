@@ -14,7 +14,7 @@ chai.use(spies).use(promised);
 
 describe('Router#constructor', function () {
     it('should instantiate', function (done) {
-        var router = nightlife.createRouter();
+        var router = nightlife.createRouter({port: 3000});
         expect(router).to.be.an.instanceof(nightlife.Router);
         expect(router.roles).to.have.property('broker');
         expect(router.roles).to.have.property('dealer');
@@ -26,7 +26,7 @@ describe('Router:Session', function () {
     var router = null, connection = null, session = null;
 
     before(function (done) {
-        router = nightlife.createRouter();
+        router = nightlife.createRouter({port: 3000});
 
         setTimeout(function() { done(); }, 500);
     });
@@ -71,7 +71,7 @@ describe('Router:Publish/Subscribe', function () {
     var router = null, connection = null, session = null, subscription = null;
 
     before(function (done) {
-        router = nightlife.createRouter();
+        router = nightlife.createRouter({port: 3000});
 
         setTimeout(function() {
             connection = new autobahn.Connection({
@@ -154,7 +154,7 @@ describe('Router:Remote Procedures', function () {
     var router = null, connection = null, session = null, registration = null;
 
     before(function (done) {
-        router = nightlife.createRouter();
+        router = nightlife.createRouter({port: 3000});
 
         setTimeout(function() {
             connection = new autobahn.Connection({
