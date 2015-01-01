@@ -37,6 +37,6 @@
     "node-clogger": "git+https://github.com/christian-raedel/node-clogger.git",
     "q": "^1.0.1",
     "segfault-handler": "^0.2.2",
-    "ws": "^0.4.32"
+    "ws": "^0.6.4"
   }
 }
